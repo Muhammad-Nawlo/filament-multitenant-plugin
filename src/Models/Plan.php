@@ -68,7 +68,7 @@ class Plan extends Model
     public function addFeature(string $feature): void
     {
         $features = $this->features ?? [];
-        if (!in_array($feature, $features)) {
+        if (! in_array($feature, $features)) {
             $features[] = $feature;
             $this->update(['features' => $features]);
         }
@@ -80,7 +80,7 @@ class Plan extends Model
     public function removeFeature(string $feature): void
     {
         $features = $this->features ?? [];
-        $features = array_filter($features, fn($f) => $f !== $feature);
+        $features = array_filter($features, fn ($f) => $f !== $feature);
         $this->update(['features' => array_values($features)]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace MuhammadNawlo\MultitenantPlugin;
 
+use BezhanSalleh\FilamentShield\FilamentShieldServiceProvider;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
@@ -10,14 +11,13 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
+use MuhammadNawlo\MultitenantPlugin\Commands\MultitenantPluginCommand;
+use MuhammadNawlo\MultitenantPlugin\Panels\TenantAdminPanelProvider;
+use MuhammadNawlo\MultitenantPlugin\Testing\TestsMultitenantPlugin;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use MuhammadNawlo\MultitenantPlugin\Commands\MultitenantPluginCommand;
-use MuhammadNawlo\MultitenantPlugin\Testing\TestsMultitenantPlugin;
-use MuhammadNawlo\MultitenantPlugin\Panels\TenantAdminPanelProvider;
 use Stancl\Tenancy\TenancyServiceProvider;
-use BezhanSalleh\FilamentShield\FilamentShieldServiceProvider;
 
 class MultitenantPluginServiceProvider extends PackageServiceProvider
 {
@@ -61,12 +61,12 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void 
+    public function packageRegistered(): void
     {
         // Register required service providers
         $this->app->register(TenancyServiceProvider::class);
         $this->app->register(FilamentShieldServiceProvider::class);
-        
+
         // Register the tenant admin panel
         $this->app->register(TenantAdminPanelProvider::class);
     }

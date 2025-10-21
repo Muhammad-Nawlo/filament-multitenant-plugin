@@ -5,13 +5,14 @@ namespace MuhammadNawlo\MultitenantPlugin\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant
 {
-    use HasDatabase, HasDomains;
+    use HasDatabase;
+    use HasDomains;
 
     protected $fillable = [
         'id',
@@ -78,7 +79,7 @@ class Tenant extends BaseTenant
         static::created(function ($tenant) {
             // Create tenant database
             $tenant->createDatabase();
-            
+
             // Assign plan roles to tenant
             if ($tenant->plan) {
                 $tenant->assignPlanRoles();
@@ -100,18 +101,18 @@ class Tenant extends BaseTenant
      */
     public function assignPlanRoles(): void
     {
-        if (!$this->plan) {
+        if (! $this->plan) {
             return;
         }
 
         // Get roles associated with the plan
         $roles = $this->plan->roles;
-        
+
         // Store roles in tenant data for later use
         $this->update([
             'data' => array_merge($this->data ?? [], [
                 'roles' => $roles->pluck('name')->toArray(),
-            ])
+            ]),
         ]);
     }
 }

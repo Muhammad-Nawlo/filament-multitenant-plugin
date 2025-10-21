@@ -43,8 +43,8 @@ class MultitenantPluginCommand extends Command
         $this->line('1. Configure your tenancy settings in config/tenancy.php');
         $this->line('2. Set up Filament Shield in your application');
         $this->line('3. Visit /tenant-admin to access the admin panel');
-        
-        if (!$this->option('seed')) {
+
+        if (! $this->option('seed')) {
             $this->line('4. Run "php artisan multitenancy:setup --seed" to create default plans');
         }
 

@@ -4,8 +4,8 @@ namespace MuhammadNawlo\MultitenantPlugin\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use MuhammadNawlo\MultitenantPlugin\Models\Tenant;
 use MuhammadNawlo\MultitenantPlugin\Models\Plan;
+use MuhammadNawlo\MultitenantPlugin\Models\Tenant;
 
 class TenantStatsWidget extends BaseWidget
 {

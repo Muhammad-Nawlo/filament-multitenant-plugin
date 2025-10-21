@@ -5,7 +5,6 @@ namespace MuhammadNawlo\MultitenantPlugin\Database\Seeders;
 use Illuminate\Database\Seeder;
 use MuhammadNawlo\MultitenantPlugin\Models\Plan;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class DefaultPlansSeeder extends Seeder
 {
@@ -16,7 +15,7 @@ class DefaultPlansSeeder extends Seeder
     {
         // Create default roles
         $roles = $this->createDefaultRoles();
-        
+
         // Create default plans
         $this->createDefaultPlans($roles);
     }

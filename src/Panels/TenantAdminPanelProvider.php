@@ -2,13 +2,13 @@
 
 namespace MuhammadNawlo\MultitenantPlugin\Panels;
 
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Navigation\NavigationItem;
-use MuhammadNawlo\MultitenantPlugin\Resources\TenantResource;
-use MuhammadNawlo\MultitenantPlugin\Resources\PlanResource;
-use MuhammadNawlo\MultitenantPlugin\Widgets\TenantStatsWidget;
 use MuhammadNawlo\MultitenantPlugin\Pages\Dashboard;
+use MuhammadNawlo\MultitenantPlugin\Resources\PlanResource;
+use MuhammadNawlo\MultitenantPlugin\Resources\TenantResource;
+use MuhammadNawlo\MultitenantPlugin\Widgets\TenantStatsWidget;
 
 class TenantAdminPanelProvider extends PanelProvider
 {
