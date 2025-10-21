@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace MuhammadNawlo\MultitenantPlugin;
 
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -13,14 +13,17 @@ use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
-use VendorName\Skeleton\Testing\TestsSkeleton;
+use MuhammadNawlo\MultitenantPlugin\Commands\MultitenantPluginCommand;
+use MuhammadNawlo\MultitenantPlugin\Testing\TestsMultitenantPlugin;
+use MuhammadNawlo\MultitenantPlugin\Panels\TenantAdminPanelProvider;
+use Stancl\Tenancy\TenancyServiceProvider;
+use BezhanSalleh\FilamentShield\FilamentShieldServiceProvider;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class MultitenantPluginServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'skeleton';
+    public static string $name = 'filament-multitenant-plugin';
 
-    public static string $viewNamespace = 'skeleton';
+    public static string $viewNamespace = 'filament-multitenant-plugin';
 
     public function configurePackage(Package $package): void
     {
@@ -36,7 +39,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
                     ->publishConfigFile()
                     ->publishMigrations()
                     ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub(':vendor_slug/:package_slug');
+                    ->askToStarRepoOnGitHub('muhammad-nawlo/filament-multitenant-plugin');
             });
 
         $configFileName = $package->shortName();
@@ -58,7 +61,15 @@ class SkeletonServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void 
+    {
+        // Register required service providers
+        $this->app->register(TenancyServiceProvider::class);
+        $this->app->register(FilamentShieldServiceProvider::class);
+        
+        // Register the tenant admin panel
+        $this->app->register(TenantAdminPanelProvider::class);
+    }
 
     public function packageBooted(): void
     {
@@ -80,18 +91,18 @@ class SkeletonServiceProvider extends PackageServiceProvider
         if (app()->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
                 $this->publishes([
-                    $file->getRealPath() => base_path("stubs/skeleton/{$file->getFilename()}"),
-                ], 'skeleton-stubs');
+                    $file->getRealPath() => base_path("stubs/filament-multitenant-plugin/{$file->getFilename()}"),
+                ], 'filament-multitenant-plugin-stubs');
             }
         }
 
         // Testing
-        Testable::mixin(new TestsSkeleton);
+        Testable::mixin(new TestsMultitenantPlugin);
     }
 
     protected function getAssetPackageName(): ?string
     {
-        return ':vendor_slug/:package_slug';
+        return 'muhammad-nawlo/filament-multitenant-plugin';
     }
 
     /**
@@ -100,9 +111,9 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            // AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
-            Css::make('skeleton-styles', __DIR__ . '/../resources/dist/skeleton.css'),
-            Js::make('skeleton-scripts', __DIR__ . '/../resources/dist/skeleton.js'),
+            // AlpineComponent::make('filament-multitenant-plugin', __DIR__ . '/../resources/dist/components/filament-multitenant-plugin.js'),
+            Css::make('filament-multitenant-plugin-styles', __DIR__ . '/../resources/dist/filament-multitenant-plugin.css'),
+            Js::make('filament-multitenant-plugin-scripts', __DIR__ . '/../resources/dist/filament-multitenant-plugin.js'),
         ];
     }
 
@@ -112,7 +123,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            SkeletonCommand::class,
+            MultitenantPluginCommand::class,
         ];
     }
 
@@ -146,7 +157,8 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_skeleton_table',
+            'create_plans_table',
+            'create_plan_roles_table',
         ];
     }
 }

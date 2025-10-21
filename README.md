@@ -1,72 +1,157 @@
-# :package_description
+# Filament Multitenancy Manager
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
+A comprehensive Filament 3 plugin for managing multitenancy with `stancl/tenancy` and `bezhansalleh/filament-shield` integration.
 
-<!--delete-->
----
-This repo can be used to scaffold a Filament plugin. Follow these steps to get started:
+## Features
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Make something great!
----
-<!--/delete-->
-
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+- 🏢 **Tenant Management**: Create and manage tenants with custom domains
+- 📋 **Subscription Plans**: Define plans with role-based access control
+- 🔐 **Role Integration**: Seamless integration with Filament Shield
+- 🎯 **Central Admin Panel**: Dedicated panel for tenant administration
+- 🗄️ **Database Management**: Automatic tenant database creation
+- 🚀 **Easy Setup**: Simple installation and configuration
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require muhammad-nawlo/filament-multitenant-plugin
 ```
 
-You can publish and run the migrations with:
+Publish and run the migrations:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
+php artisan vendor:publish --tag="filament-multitenant-plugin-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+Publish the config file:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan vendor:publish --tag="filament-multitenant-plugin-config"
 ```
 
-Optionally, you can publish the views using
+## Configuration
 
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
+### 1. Service Provider Registration
+
+Add the service provider to your `config/app.php`:
+
+```php
+'providers' => [
+    // ...
+    MuhammadNawlo\MultitenantPlugin\MultitenantPluginServiceProvider::class,
+],
 ```
 
-This is the contents of the published config file:
+### 2. Tenancy Configuration
+
+Configure `stancl/tenancy` in your `config/tenancy.php`:
 
 ```php
 return [
+    'tenant_model' => \MuhammadNawlo\MultitenantPlugin\Models\Tenant::class,
+    'domain_model' => \Stancl\Tenancy\Database\Models\Domain::class,
+    // ... other tenancy settings
 ];
 ```
 
+### 3. Shield Configuration
+
+Ensure `bezhansalleh/filament-shield` is properly configured in your application.
+
 ## Usage
 
-```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+### Accessing the Admin Panel
+
+Visit `/tenant-admin` to access the tenant management panel.
+
+### Creating Tenants
+
+1. Navigate to the Tenants section
+2. Click "Create Tenant"
+3. Fill in tenant details:
+   - **ID**: Unique identifier
+   - **Name**: Display name
+   - **Domain**: Primary domain (e.g., `tenant.example.com`)
+   - **Database**: Database name
+   - **Plan**: Select a subscription plan
+
+### Managing Plans
+
+1. Navigate to the Plans section
+2. Create or edit subscription plans
+3. Assign roles to each plan
+4. Define plan features and pricing
+
+### Default Plans
+
+The plugin includes a seeder with default plans:
+
+- **Free**: Basic features with user role
+- **Starter**: Advanced features with user and editor roles
+- **Professional**: Full features with user, editor, and manager roles
+- **Enterprise**: Complete access with all roles
+
+Run the seeder:
+
+```bash
+php artisan db:seed --class="MuhammadNawlo\MultitenantPlugin\Database\Seeders\DefaultPlansSeeder"
 ```
+
+## Architecture
+
+### Models
+
+- **Tenant**: Extends `stancl/tenancy` tenant model with plan relationships
+- **Plan**: Subscription plans with role assignments
+- **Role**: Filament Shield roles linked to plans
+
+### Resources
+
+- **TenantResource**: Full CRUD for tenant management
+- **PlanResource**: Subscription plan management with role assignments
+
+### Panel
+
+- **TenantAdminPanel**: Central domain panel for tenant administration
+
+## Configuration Options
+
+The plugin provides extensive configuration options in `config/multitenancy-manager.php`:
+
+```php
+return [
+    'panel' => [
+        'id' => 'tenant-admin',
+        'path' => 'tenant-admin',
+        'brand_name' => 'Tenant Management',
+    ],
+    'tenant' => [
+        'auto_create_database' => true,
+        'auto_assign_roles' => true,
+    ],
+    'features' => [
+        'tenant_creation' => true,
+        'plan_management' => true,
+        'role_assignment' => true,
+    ],
+];
+```
+
+## Security
+
+- Authentication required for all admin operations
+- Role-based access control via Filament Shield
+- Domain validation and security checks
+- Configurable tenant limits and restrictions
 
 ## Testing
 
 ```bash
 composer test
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
@@ -78,7 +163,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Muhammad-Nawlo](https://github.com/Muhammad-Nawlo)
 - [All Contributors](../../contributors)
 
 ## License
